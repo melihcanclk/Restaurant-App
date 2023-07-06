@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Modal, Grid } from 'semantic-ui-react'
 import send from '../functions/sendRequest';
 
 
-const RestaurantAddModal = ({ setRestaurants }) => {
-    const [modalState, setModalState] = React.useState(false);
+const EditModal = ({ editModalState, setEditModalState, id, setRestaurant }) => {
 
     const formRef = React.useRef({
         name: '',
@@ -16,53 +15,77 @@ const RestaurantAddModal = ({ setRestaurants }) => {
         }
     });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        Object.keys(formRef.current).forEach((key) => {
-            if (key !== 'location') {
-                formRef.current[key] = formRef.current[key].value;
-            } else {
-                Object.keys(formRef.current.location).forEach((locationKey) => {
-                    formRef.current.location[locationKey] = formRef.current.location[locationKey].value;
-                })
-            }
-        })
+    const handleSubmit = () => {
+        send(`/api/burgers/${id}`, {
+            name: formRef.current.name.value,
+            description: formRef.current.description.value,
+            location: {
+                address: formRef.current.location.address.value,
+                zipcode: formRef.current.location.zipcode.value,
+                web: formRef.current.location.web.value,
 
-        send('/api/burgers', formRef.current, 'POST')
+            }
+        }, 'PATCH')
             .then((data) => {
                 if (data.ok) {
-                    send('/api/burgers', {}, 'GET')
-                        .then((res) => res.json())
-                        .then((data) => setRestaurants(data.data))
-                        .catch((err) => console.log(err));
-                }
+                    setRestaurant({
+                        name: formRef.current.name.value,
+                        description: formRef.current.description.value,
+                        location: {
+                            address: formRef.current.location.address.value,
+                            zipcode: formRef.current.location.zipcode.value,
+                            web: formRef.current.location.web.value,
 
-                setModalState(false);
+                        }
+                    });
+                    setEditModalState(false);
+                }
+            })
+            .catch((err) => console.log(err)
+            )
+    }
+
+
+    useEffect(() => {
+        // get info from server
+        send(`/api/burgers/${id}`, {}, 'GET')
+            .then((data) => {
+                if (data.ok) {
+                    return data.json();
+                }
+            })
+            .then((data) => {
+                Object.keys(data.data).forEach((key) => {
+                    if (key === 'location') {
+                        Object.keys(data.data[key]).forEach((locationKey) => {
+                            if (formRef.current[key][locationKey]) {
+                                formRef.current[key][locationKey].value = data.data[key][locationKey];
+                            }
+                        })
+                    } else {
+                        if (formRef.current[key]) {
+                            formRef.current[key].value = data.data[key];
+                        }
+                    }
+                })
+
             })
             .catch((err) => console.log(err));
-    }
+
+    }, [editModalState])
 
     return (
         <div>
-            <div style={{
-                marginBottom: '20px',
-            }}>
-                <button className='ui violet button' onClick={() => setModalState(true)}>Add Restaurant</button>
-            </div>
-
             <Modal
-                onClose={() => setModalState(false)}
-                onOpen={() => setModalState(true)}
-                open={modalState}
+                onClose={() => setEditModalState(false)}
+                onOpen={() => setEditModalState(true)}
+                open={editModalState}
             >
-                <Modal.Header>Add Restaurant</Modal.Header>
+                <Modal.Header>Edit Restaurant</Modal.Header>
                 <Modal.Content>
                     <Modal.Description>
-                        <form className="ui form" onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit} className="ui form" >
                             <div className="form-group">
-                                {
-                                    // label and inputs will be in a grid
-                                }
                                 <Grid columns={2} padded>
                                     <Grid.Row>
                                         <Grid.Column width={4}>
@@ -108,9 +131,9 @@ const RestaurantAddModal = ({ setRestaurants }) => {
                                 justifyContent: 'center',
                             }}>
                                 <div className="ui buttons">
-                                    <button type='button' onClick={() => setModalState(false)} className="ui button">Cancel</button>
+                                    <button type='button' onClick={() => setEditModalState(false)} className="ui button">Cancel</button>
                                     <div className="or"></div>
-                                    <button className="ui positive button active" onClick={handleSubmit} type='button' >Add Restaurant</button>
+                                    <input type="submit" className="ui positive button" value="Save" />
                                 </div>
                             </div>
                         </form>
@@ -124,4 +147,4 @@ const RestaurantAddModal = ({ setRestaurants }) => {
     )
 }
 
-export default RestaurantAddModal
+export default EditModal

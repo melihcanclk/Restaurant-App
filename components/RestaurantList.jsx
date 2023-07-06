@@ -5,29 +5,39 @@ const RestaurantList = ({ restaurants, setRestaurants }) => {
     const styles = {
         color: 'white',
         maxHeight: '81vh',
-        width : '300px',
+        width: '300px',
         // scroll
         overflowY: 'scroll',
         paddingRight: '30px',
-    }
 
-    const a = {
-        color: 'white',
-        textDecoration: 'none',
-    }
+        list: {
+            padding: '10px',
+            margin: '10px',
+            border: '3px solid white',
+            borderRadius: '5px',
+        },
 
-    const ul = {
-        listStyleType: 'none',
-    }
+        a: {
+            color: 'white',
+            textDecoration: 'none',
+        },
 
+        ul : {
+            listStyleType: 'none',
+        }
+    }
 
     return (
         <div style={styles}>
-            <ul style={ul} >
+            <ul style={styles.ul} >
                 {
                     Object.keys(restaurants).map((key) => (
                         <li key={key}>
-                            <a style={a} href={`/restaurant/${key}`}>{restaurants[key].name}</a>
+                            <a style={styles.a} href={`/restaurant/${key}`}>
+                                <div style={styles.list}>
+                                    {restaurants[key].name}
+                                </div>
+                            </a>
                         </li>
                     ))
                 }

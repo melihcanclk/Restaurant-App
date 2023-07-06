@@ -3,7 +3,7 @@ import { Modal } from 'semantic-ui-react'
 import send from '../functions/sendRequest';
 import { useNavigate } from 'react-router-dom';
 
-const ConfirmModal = ({ modalState, setModalState, id }) => {
+const ConfirmModal = ({ confirmModalState, setConfirmModalState, id }) => {
 
     const navigate = useNavigate();
 
@@ -21,9 +21,9 @@ const ConfirmModal = ({ modalState, setModalState, id }) => {
     return (
         <div>
             <Modal
-                onClose={() => setModalState(false)}
-                onOpen={() => setModalState(true)}
-                open={modalState}
+                onClose={() => setConfirmModalState(false)}
+                onOpen={() => setConfirmModalState(true)}
+                open={confirmModalState}
                 size='mini'
             >
                 {// make confirmation for if user want to delete the restaurant
@@ -37,7 +37,7 @@ const ConfirmModal = ({ modalState, setModalState, id }) => {
                     </Modal.Description>
                 </Modal.Content>
                 <Modal.Actions>
-                    <button onClick={() => setModalState(false)} className="ui button">Cancel</button>
+                    <button onClick={() => setConfirmModalState(false)} className="ui button">Cancel</button>
                     <button onClick={handleDelete} className="ui red button">Delete</button>
                 </Modal.Actions>
             </Modal>

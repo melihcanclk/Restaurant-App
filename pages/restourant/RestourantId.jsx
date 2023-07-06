@@ -2,15 +2,15 @@ import useLoader from "../../hooks/useLoader";
 import Container from "../../components/Container";
 import { useParams } from "react-router-dom";
 import send from '../../functions/sendRequest';
-import { useNavigate } from "react-router-dom";
 import ConfirmModal from "../../components/ConfirmModal";
 import React from 'react'
+import EditModal from "../../components/EditModal";
 
 export default function RestaurantId() {
     const { id } = useParams()
 
-
-    const [modalState, setModalState] = React.useState(false);
+    const [confirmModalState, setConfirmModalState] = React.useState(false);
+    const [editModalState, setEditModalState] = React.useState(false);
 
     const [restaurant, setRestaurant] = useLoader(`/api/burgers/${id}`)
 
@@ -19,8 +19,6 @@ export default function RestaurantId() {
             marginLeft: '10px'
         }
     }
-
-
     const handleVisit = () => {
         send(`/api/burgers/${id}`, {
             visited: !restaurant.visited
@@ -34,7 +32,6 @@ export default function RestaurantId() {
                 }
             })
             .catch((err) => console.log(err));
-
     }
 
     return (
@@ -50,7 +47,10 @@ export default function RestaurantId() {
                             </h1>
 
                             <div style={styles.innerIcon}>
-                                <button onClick={() => setModalState(true)} className="ui icon button">
+                                <button onClick={() => setEditModalState(true)} className="ui icon button">
+                                    <i className="pencil alternate icon"></i>
+                                </button>
+                                <button onClick={() => setConfirmModalState(true)} className="ui icon button">
                                     <i className="red trash icon"></i>
                                 </button>
                                 <button onClick={handleVisit} className="ui icon button">
@@ -59,8 +59,8 @@ export default function RestaurantId() {
                                     } />
                                 </button>
                             </div>
-
-                            <ConfirmModal setModalState={setModalState} modalState={modalState} id={id} />
+                            <EditModal setEditModalState={setEditModalState} editModalState={editModalState} id={id} setRestaurant={setRestaurant} />
+                            <ConfirmModal setConfirmModalState={setConfirmModalState} confirmModalState={confirmModalState} id={id} />
                         </div>
                         <h3>Description</h3>
                         <p>{restaurant.description}</p>
@@ -73,7 +73,7 @@ export default function RestaurantId() {
                         </div>
                         <h3>Website</h3>
                         {restaurant.location?.web ? (
-                            <a href={restaurant.location?.web}>{restaurant.location?.web}</a>
+                            <a href={restaurant.location?.web} target="_blank">{restaurant.location?.web}</a>
                         ) : (
                             <p>No website</p>
                         )}

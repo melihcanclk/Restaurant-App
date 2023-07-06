@@ -11,7 +11,7 @@ const useLoader = (requestUrl) => {
             .catch((err) => console.log(err));
     }, []);
 
-    return data
+    return [data, setData]
 }
 
 export default useLoader

@@ -1,11 +1,13 @@
 import useLoader from "../../hooks/useLoader";
 import Container from "../../components/Container";
 import { useParams } from "react-router-dom";
+import send from '../../functions/sendRequest';
+import { useEffect } from "react";
 
 export default function RestaurantId() {
     const { id } = useParams()
 
-    const restaurant = useLoader(`/api/burgers/${id}`)
+    const [restaurant, setRestaurant] = useLoader(`/api/burgers/${id}`)
 
     const styles = {
         innerIcon: {
@@ -13,9 +15,27 @@ export default function RestaurantId() {
         }
     }
 
+
     const handleVisit = () => {
-       
+        send(`/api/burgers/${id}`, {
+            visited: !restaurant.visited
+        }, 'PATCH')
+            .then((data) => {
+                if (data.ok) {
+                    setRestaurant({
+                        ...restaurant,
+                        visited: !restaurant.visited
+                    })
+                }
+            })
+            .catch((err) => console.log(err));
+
     }
+
+    useEffect(() => {
+        console.log(restaurant)
+    }, [restaurant])
+
 
     return (
         <Container>
@@ -27,7 +47,6 @@ export default function RestaurantId() {
                             justifyContent: 'space-between',
                         }}>
                             <h1>{restaurant.name}
-
                             </h1>
                             {
                                 <div style={styles.innerIcon}>

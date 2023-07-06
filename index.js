@@ -67,6 +67,25 @@ app.post('/api/burgers', (req, res) => {
         .catch(err => console.error(err))
 })
 
+// update a restaurant
+app.patch('/api/burgers/:id', (req, res) => {
+    const { id } = req.params
+    const url = `${process.env.ASTRA_DB_URL}/burger_info/${id}`
+    const options = {
+        method: 'PATCH',
+        headers: {
+            'X-Cassandra-Token': process.env.ASTRA_DB_APPLICATION_TOKEN,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(req.body)
+    }
+    fetch(url, options)
+        .then(response => response.json())
+        .then(data => res.json(data))
+        .catch(err => console.error(err))
+})
+
+
 
 // errors
 app.use((req, res, next) => {

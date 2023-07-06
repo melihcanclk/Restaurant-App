@@ -6,7 +6,7 @@ import RestaurantAddModal from '../components/RestaurantAddModal'
 
 const Home = () => {
 
-    const restaurants = useLoader('/api/burgers');
+    const [restaurants] = useLoader('/api/burgers');
     
     return (
         <Container>

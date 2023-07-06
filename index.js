@@ -26,6 +26,7 @@ app.get('/api/burgers', async (req, res) => {
             'Content-Type': 'application/json'
         }
     }
+    // fetch and return data as json
     fetch(url, options)
         .then(response => response.json())
         .then(data => res.json(data))
@@ -44,7 +45,13 @@ app.get('/api/burgers/:id', (req, res) => {
         }
     }
     fetch(url, options)
-        .then(response => response.json())
+        .then(response => {
+            if (response.status === 404) {
+                return null
+            } else {
+                return response.json()
+            }
+        })
         .then(data => res.json(data))
         .catch(err => console.error(err))
 })

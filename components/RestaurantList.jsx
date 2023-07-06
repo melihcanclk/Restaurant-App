@@ -7,7 +7,7 @@ const RestaurantList = ({ restaurants, setRestaurants }) => {
         maxHeight: '81vh',
         width: '300px',
         // scroll
-        overflowY: 'scroll',
+        overflowY: 'auto',
         paddingRight: '30px',
 
         list: {

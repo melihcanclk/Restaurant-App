@@ -16,7 +16,7 @@ app.use(cors())
 app.use(express.json())
 
 // get all the restaurants
-app.get('/burgers', async (req, res) => {
+app.get('/api/burgers', async (req, res) => {
     const url = `${process.env.ASTRA_DB_URL}/burger_info`
     const options = {
         headers: {
@@ -29,6 +29,22 @@ app.get('/burgers', async (req, res) => {
         .then(data => res.json(data))
         .catch(err => console.error(err))
 
+})
+
+// get a single restaurant
+app.get('/api/burgers/:id', async (req, res) => {
+    const { id } = req.params
+    const url = `${process.env.ASTRA_DB_URL}/burger_info/${id}`
+    const options = {
+        headers: {
+            'X-Cassandra-Token': process.env.ASTRA_DB_APPLICATION_TOKEN,
+            'Content-Type': 'application/json'
+        }
+    }
+    fetch(url, options) 
+        .then(response => response.json())
+        .then(data => res.json(data))
+        .catch(err => console.error(err))
 })
 
 // errors

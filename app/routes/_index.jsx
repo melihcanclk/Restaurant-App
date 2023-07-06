@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import useLoader from "../../hooks/useLoader";
 
 export const meta = () => {
   return [
@@ -9,17 +10,7 @@ export const meta = () => {
 
 export default function Index() {
 
-  const [restaurants, setRestaurants] = useState([]);
-
-  useEffect(() => {
-    fetch("http://localhost:8080/burgers")
-      .then((res) => res.json())
-      .then((data) => {
-        setRestaurants(data.data);
-        console.log(data.data)
-      });
-  }, []);
-
+  const [restaurants] = useLoader('/api/burgers');
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>

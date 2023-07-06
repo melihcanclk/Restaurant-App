@@ -15,4 +15,9 @@ module.exports = {
     v2_normalizeFormMethod: true,
     v2_routeConvention: true,
   },
+  webpack(config) {
+    config.resolve.alias['@'] = path.resolve(__dirname, 'app')
+    return config;
+  }
+ 
 };

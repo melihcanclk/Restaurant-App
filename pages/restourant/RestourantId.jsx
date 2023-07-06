@@ -2,10 +2,15 @@ import useLoader from "../../hooks/useLoader";
 import Container from "../../components/Container";
 import { useParams } from "react-router-dom";
 import send from '../../functions/sendRequest';
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import ConfirmModal from "../../components/ConfirmModal";
+import React from 'react'
 
 export default function RestaurantId() {
     const { id } = useParams()
+
+
+    const [modalState, setModalState] = React.useState(false);
 
     const [restaurant, setRestaurant] = useLoader(`/api/burgers/${id}`)
 
@@ -32,11 +37,6 @@ export default function RestaurantId() {
 
     }
 
-    useEffect(() => {
-        console.log(restaurant)
-    }, [restaurant])
-
-
     return (
         <Container>
             {
@@ -48,16 +48,19 @@ export default function RestaurantId() {
                         }}>
                             <h1>{restaurant.name}
                             </h1>
-                            {
-                                <div style={styles.innerIcon}>
-                                    <button onClick={handleVisit} className="ui button">
-                                        <i style={{ margin: 0 }} className={
-                                            restaurant.visited ? "check circle icon" : "circle icon"
-                                        } />
-                                    </button>
-                                </div>
 
-                            }
+                            <div style={styles.innerIcon}>
+                                <button onClick={() => setModalState(true)} className="ui icon button">
+                                    <i className="red trash icon"></i>
+                                </button>
+                                <button onClick={handleVisit} className="ui icon button">
+                                    <i style={{ margin: 0 }} className={
+                                        restaurant.visited ? "green circle icon" : "circle icon"
+                                    } />
+                                </button>
+                            </div>
+
+                            <ConfirmModal setModalState={setModalState} modalState={modalState} id={id} />
                         </div>
                         <h3>Description</h3>
                         <p>{restaurant.description}</p>

@@ -6,14 +6,14 @@ import RestaurantAddModal from '../components/RestaurantAddModal'
 
 const Home = () => {
 
-    const [restaurants] = useLoader('/api/burgers');
-    
+    const [restaurants, setRestaurants] = useLoader('/api/burgers');
+
     return (
         <Container>
             <div className="row">
                 <div className="col-md-6">
                     <h2>Restaurants</h2>
-                    <RestaurantAddModal />
+                    <RestaurantAddModal setRestaurants={setRestaurants} />
                     <RestaurantList restaurants={restaurants} />
                 </div>
             </div>

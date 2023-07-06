@@ -85,6 +85,22 @@ app.patch('/api/burgers/:id', (req, res) => {
         .catch(err => console.error(err))
 })
 
+// delete a restaurant
+app.delete('/api/burgers/:id', (req, res) => {
+    const { id } = req.params
+    const url = `${process.env.ASTRA_DB_URL}/burger_info/${id}`
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'X-Cassandra-Token': process.env.ASTRA_DB_APPLICATION_TOKEN,
+            'Content-Type': 'application/json'
+        }
+    }
+    fetch(url, options)
+        .then(data => res.json(data))
+        .catch(err => console.error(err))
+})
+
 
 
 // errors

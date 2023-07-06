@@ -1,6 +1,6 @@
 import React from 'react'
 
-const RestaurantList = ({ restaurants }) => {
+const RestaurantList = ({ restaurants, setRestaurants }) => {
 
     const styles = {
         color: 'white',

@@ -3,7 +3,7 @@ import { Modal, Grid } from 'semantic-ui-react'
 import send from '../functions/sendRequest';
 
 
-const RestaurantAddModal = () => {
+const RestaurantAddModal = ({ setRestaurants }) => {
     const [modalState, setModalState] = React.useState(false);
 
     const formRef = React.useRef({
@@ -30,7 +30,13 @@ const RestaurantAddModal = () => {
 
         send('/api/burgers', formRef.current, 'POST')
             .then((data) => {
-                console.log(data);
+                if (data.ok) {
+                    send('/api/burgers', {}, 'GET')
+                        .then((res) => res.json())
+                        .then((data) => setRestaurants(data.data))
+                        .catch((err) => console.log(err));
+                }
+
                 setModalState(false);
             })
             .catch((err) => console.log(err));

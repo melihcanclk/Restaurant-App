@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
+import send from '../functions/sendRequest';
 
 const useLoader = (requestUrl) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:8080' + requestUrl)
+        send(requestUrl, {}, 'GET')
             .then((res) => res.json())
-            .then((data) => {
-                setData(data.data);
-            });
+            .then((data) => setData(data.data))
+            .catch((err) => console.log(err));
     }, []);
 
     return data

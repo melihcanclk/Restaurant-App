@@ -1,23 +1,25 @@
-const PORT=8080
-const express = require('express')
-const cors = require('cors')
-const morgan = require('morgan')
-const fetch = require("node-fetch");
+const PORT = 8080
+import express, { json } from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import fetch from "node-fetch";
 
 morgan('tiny')
 
-require('dotenv').config()
+// dotenv
+import dotenv from 'dotenv'
+dotenv.config()
 
 const app = express()
 
 app.use(morgan('tiny'))
 app.use(cors())
 // read json body
-app.use(express.json())
+app.use(json())
 
 // get all the restaurants
 app.get('/api/burgers', async (req, res) => {
-    const url = `${process.env.ASTRA_DB_URL}/burger_info`
+    const url = `${process.env.ASTRA_DB_URL}/burger_info?page-size=20`
     const options = {
         headers: {
             'X-Cassandra-Token': process.env.ASTRA_DB_APPLICATION_TOKEN,
@@ -25,14 +27,14 @@ app.get('/api/burgers', async (req, res) => {
         }
     }
     fetch(url, options)
-        .then(response => response.json())  
+        .then(response => response.json())
         .then(data => res.json(data))
         .catch(err => console.error(err))
 
 })
 
 // get a single restaurant
-app.get('/api/burgers/:id', async (req, res) => {
+app.get('/api/burgers/:id', (req, res) => {
     const { id } = req.params
     const url = `${process.env.ASTRA_DB_URL}/burger_info/${id}`
     const options = {
@@ -41,11 +43,30 @@ app.get('/api/burgers/:id', async (req, res) => {
             'Content-Type': 'application/json'
         }
     }
-    fetch(url, options) 
+    fetch(url, options)
         .then(response => response.json())
         .then(data => res.json(data))
         .catch(err => console.error(err))
 })
+
+// create a restaurant
+app.post('/api/burgers', (req, res) => {
+    const url = `${process.env.ASTRA_DB_URL}/burger_info`
+    const options = {
+        method: 'POST',
+        headers: {
+            'X-Cassandra-Token': process.env.ASTRA_DB_APPLICATION_TOKEN,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(req.body)
+    }
+    console.log(options.body)
+    fetch(url, options)
+        .then(response => response.json())
+        .then(data => res.json(data))
+        .catch(err => console.error(err))
+})
+
 
 // errors
 app.use((req, res, next) => {
@@ -64,4 +85,4 @@ app.use((error, req, res, next) => {
 
 app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`)
-    })
+})

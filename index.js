@@ -8,7 +8,12 @@ morgan('tiny')
 
 // dotenv
 import dotenv from 'dotenv'
-dotenv.config()
+dotenv.config(
+    {
+        path: './.env.local'
+    }
+
+)
 
 const app = express()
 
@@ -20,6 +25,7 @@ app.use(json())
 // get all the restaurants
 app.get('/api/burgers', async (req, res) => {
     const url = `${process.env.ASTRA_DB_URL}/burger_info?page-size=20`
+    console.log(url)
     const options = {
         headers: {
             'X-Cassandra-Token': process.env.ASTRA_DB_APPLICATION_TOKEN,

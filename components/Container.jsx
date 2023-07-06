@@ -8,7 +8,8 @@ const Container = ({ children }) => {
     const style = {
         fontFamily: 'system-ui, sans-serif',
         textAlign: 'center',
-        height: '98vh',
+        position : 'relative',
+        height: '97vh',
         color: 'white',
         backgroundColor: '#282c34',
         padding: '10px',
@@ -17,7 +18,7 @@ const Container = ({ children }) => {
 
         div: {
             margin: '10px',
-            height: '95%',
+            height: '90%',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',

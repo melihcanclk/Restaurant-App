@@ -39,7 +39,7 @@ export default function RestaurantId() {
         <Container>
             {
                 isLoading ? <Loader active inline='centered' /> :
-                    !isFound ? <h1>Not found</h1> :
+                    !isFound ? <h1>Restaurant not found</h1> :
                         <div>
                             <div style={{
                                 display: 'flex',

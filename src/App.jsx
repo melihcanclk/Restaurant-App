@@ -5,15 +5,14 @@ import RestaurantHome from '../pages/restourant/RestaurantHome'
 
 function App() {
 
+
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/restaurants" element={<RestaurantHome />} />
-        <Route path="/restaurant/:id" element={<RestaurantId />} />
-        <Route path='*' element={<h1>Page Not Found</h1>} />
-      </Routes>
-    </>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/restaurants" element={<RestaurantHome />} />
+      <Route path="/restaurant/:id" element={<RestaurantId />} />
+      <Route path='*' element={<h1>Page Not Found</h1>} />
+    </Routes>
   )
 }
 

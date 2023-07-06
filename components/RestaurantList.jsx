@@ -11,10 +11,7 @@ const RestaurantList = ({ restaurants, setRestaurants }) => {
         paddingRight: '30px',
 
         list: {
-            padding: '10px',
             margin: '10px',
-            border: '3px solid white',
-            borderRadius: '5px',
         },
 
         a: {
@@ -22,7 +19,7 @@ const RestaurantList = ({ restaurants, setRestaurants }) => {
             textDecoration: 'none',
         },
 
-        ul : {
+        ul: {
             listStyleType: 'none',
         }
     }

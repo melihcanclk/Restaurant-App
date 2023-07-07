@@ -1,4 +1,3 @@
-const PORT = 8080
 import express, { json } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -131,6 +130,7 @@ app.use((error, req, res, next) => {
     })
 })
 
-app.listen(PORT, () => {
-    console.log(`listening on port ${PORT}`)
+const SERVER_PORT = process.env.SERVER_PORT
+app.listen(SERVER_PORT, () => {
+    console.log(`listening on port ${SERVER_PORT}`)
 })

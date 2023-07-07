@@ -1,24 +1,29 @@
 import React, { useEffect } from 'react'
+import { useAuth0 } from '@auth0/auth0-react'
+import { useNavigate } from 'react-router-dom'
 
 const Container = ({ children }) => {
 
     const [pageStack, setPageStack] = React.useState(null)
+    const navigate = useNavigate()
+
+    const { loginWithRedirect, logout, isAuthenticated, isLoading, user } = useAuth0();
 
     // define style
     const style = {
         fontFamily: 'system-ui, sans-serif',
         textAlign: 'center',
-        position : 'relative',
-        height: '97vh',
+        position: 'relative',
         color: 'white',
+        height: '97vh',
         backgroundColor: '#282c34',
         padding: '10px',
-        margin: '10px',
+        margin: "10px 10px 10px 10px",
         borderRadius: '10px',
+        overflow: 'hidden',
 
         div: {
-            margin: '10px',
-            height: '90%',
+            height: '80%',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -78,11 +83,47 @@ const Container = ({ children }) => {
     return (
         <div style={style}>
             <header>
-                <h1>Restaurant App</h1>
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                }}>
+                    <h1 style={{
+                        textAlign: 'center'
+                    }}>Restaurant App</h1>
+                    <div style={{
+                        textAlign: 'right',
+                    }}>
+                        {
+                            !isLoading && !isAuthenticated && (
+                                <button onClick={() => loginWithRedirect()} className="ui button">Log in</button>
+                            )
+                        }
+                        {
+                            // profile button
+                            !isLoading && isAuthenticated && (
+                                <button onClick={() => navigate('/profile')} className="ui button">Profile</button>
+                            )
+                        }
+                        {
+
+                            !isLoading && isAuthenticated && (
+                                <button onClick={() => logout(
+                                    {
+                                        returnTo: window.location.origin,
+                                    }
+                                )} className="ui button">Log out</button>
+                            )
+                        }
+
+                    </div>
+                </div>
                 {
                     pageStack &&
-                    <div>
-                        <h3>Page stack</h3>
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'left',
+                    }}>
                         {
                             // side by side 
                             pageStack.map((page, index) => (

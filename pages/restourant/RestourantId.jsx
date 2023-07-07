@@ -6,9 +6,11 @@ import ConfirmModal from "../../components/ConfirmModal";
 import React from 'react'
 import EditModal from "../../components/EditModal";
 import { Loader } from "semantic-ui-react";
+import { useAuth0 } from '@auth0/auth0-react'
 
 export default function RestaurantId() {
     const { id } = useParams()
+    const { user } = useAuth0();
 
     const [confirmModalState, setConfirmModalState] = React.useState(false);
     const [editModalState, setEditModalState] = React.useState(false);
@@ -21,18 +23,20 @@ export default function RestaurantId() {
         }
     }
     const handleVisit = () => {
-        send(`/api/burgers/${id}`, {
-            visited: !restaurant.visited
-        }, 'PATCH')
-            .then((data) => {
-                if (data.ok) {
-                    setRestaurant({
-                        ...restaurant,
-                        visited: !restaurant.visited
-                    })
-                }
-            })
-            .catch((err) => console.log(err));
+        if (user && user.sub) {
+            send(`/api/burgers/${id}`, {
+                visited: !restaurant.visited
+            }, 'PATCH', user.sub)
+                .then((data) => {
+                    if (data.ok) {
+                        setRestaurant({
+                            ...restaurant,
+                            visited: !restaurant.visited
+                        })
+                    }
+                })
+                .catch((err) => console.log(err));
+        }
     }
 
     return (

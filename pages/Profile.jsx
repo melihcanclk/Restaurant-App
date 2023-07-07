@@ -32,9 +32,9 @@ const Profile = () => {
                                 top: '35%',
                             }}>
                                 <h3>Nickname : {user && user.nickname}</h3>
-
                                 <h3>Username : {user && user.name}</h3>
                                 <h3>Email : {user && user.email}</h3>
+                                <h3>Sub : {user && user.sub}</h3>
                             </div>
                         </Grid.Column>
 

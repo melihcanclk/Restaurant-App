@@ -1,6 +1,6 @@
 import React from 'react'
 
-const RestaurantList = ({ restaurants, setRestaurants }) => {
+const RestaurantList = ({ restaurants }) => {
 
     const styles = {
         color: 'white',
@@ -28,7 +28,7 @@ const RestaurantList = ({ restaurants, setRestaurants }) => {
         <div style={styles}>
             <ul style={styles.ul} >
                 {
-                    Object.keys(restaurants).map((key) => (
+                    restaurants && Object.keys(restaurants).map((key) => (
                         <li key={key}>
                             <a style={styles.a} href={`/restaurant/${key}`}>
                                 <div style={styles.list}>

@@ -1,10 +1,12 @@
 import React from 'react'
 import { Modal, Grid } from 'semantic-ui-react'
 import send from '../functions/sendRequest';
-
+import { useAuth0 } from '@auth0/auth0-react'
 
 const RestaurantAddModal = ({ setRestaurants }) => {
     const [modalState, setModalState] = React.useState(false);
+
+    const { user } = useAuth0()
 
     const formRef = React.useRef({
         name: '',
@@ -28,18 +30,29 @@ const RestaurantAddModal = ({ setRestaurants }) => {
             }
         })
 
-        send('/api/burgers', formRef.current, 'POST')
-            .then((data) => {
-                if (data.ok) {
-                    send('/api/burgers', {}, 'GET')
-                        .then((res) => res.json())
-                        .then((data) => setRestaurants(data.data))
-                        .catch((err) => console.log(err));
-                }
+        if (user && user.sub) {
+            send('/api/burgers', formRef.current, 'POST', user.sub)
+                .then((data) => {
+                    if (data.ok) {
+                        send('/api/burgers', {}, 'GET', user.sub)
+                            .then((data) => {
+                                if (data.ok) {
+                                    return data.json()
+                                }
+                            }
+                            )
+                            .then((data) => {
+                                setRestaurants(data.data)
+                            }
+                            )
+                            .catch((err) => console.log(err));
 
-                setModalState(false);
-            })
-            .catch((err) => console.log(err));
+                    }
+
+                    setModalState(false);
+                })
+                .catch((err) => console.log(err));
+        }
     }
 
     return (

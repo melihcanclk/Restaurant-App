@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useNavigate } from 'react-router-dom'
+import send from '../functions/sendRequest';
 
 const Container = ({ children }) => {
 
@@ -79,6 +80,18 @@ const Container = ({ children }) => {
 
     }, [window.location.pathname])
 
+
+    // useEffect(() => {
+    //     if(isAuthenticated && user && user.sub){
+    //         send('/api/burgers', {}, 'GET', user.sub)
+    //         .then((data) => {
+    //             if (!data.ok) {
+    //                 send('/api/burgers', null, 'POST', user.sub)
+    //             }
+    //         })
+    //         .catch((err) => console.log(err));
+    //     }
+    // }, [isAuthenticated, user])
 
     return (
         <div style={style}>

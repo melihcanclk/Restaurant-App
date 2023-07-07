@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react'
 import { Modal, Grid } from 'semantic-ui-react'
 import send from '../functions/sendRequest';
-
+import { useAuth0 } from '@auth0/auth0-react'
 
 const EditModal = ({ editModalState, setEditModalState, id, setRestaurant }) => {
+
+    const { user } = useAuth0()
 
     const formRef = React.useRef({
         name: '',
@@ -25,7 +27,7 @@ const EditModal = ({ editModalState, setEditModalState, id, setRestaurant }) => 
                 web: formRef.current.location.web.value,
 
             }
-        }, 'PATCH')
+        }, 'PATCH', user.sub)
             .then((data) => {
                 if (data.ok) {
                     setRestaurant({
@@ -47,32 +49,35 @@ const EditModal = ({ editModalState, setEditModalState, id, setRestaurant }) => 
 
 
     useEffect(() => {
+        const sub = user && user.sub
         // get info from server
-        send(`/api/burgers/${id}`, {}, 'GET')
-            .then((data) => {
-                if (data.ok) {
-                    return data.json();
-                }
-            })
-            .then((data) => {
-                Object.keys(data.data).forEach((key) => {
-                    if (key === 'location') {
-                        Object.keys(data.data[key]).forEach((locationKey) => {
-                            if (formRef.current[key][locationKey]) {
-                                formRef.current[key][locationKey].value = data.data[key][locationKey];
-                            }
-                        })
-                    } else {
-                        if (formRef.current[key]) {
-                            formRef.current[key].value = data.data[key];
-                        }
+        if (sub) {
+            send(`/api/burgers/${id}`, {}, 'GET', sub)
+                .then((data) => {
+                    if (data.ok) {
+                        return data.json();
                     }
                 })
+                .then((data) => {
+                    Object.keys(data.data).forEach((key) => {
+                        if (key === 'location') {
+                            Object.keys(data.data[key]).forEach((locationKey) => {
+                                if (formRef.current[key][locationKey]) {
+                                    formRef.current[key][locationKey].value = data.data[key][locationKey];
+                                }
+                            })
+                        } else {
+                            if (formRef.current[key]) {
+                                formRef.current[key].value = data.data[key];
+                            }
+                        }
+                    })
 
-            })
-            .catch((err) => console.log(err));
+                })
+                .catch((err) => console.log(err));
+        }
 
-    }, [editModalState])
+    }, [editModalState, user])
 
     return (
         <div>

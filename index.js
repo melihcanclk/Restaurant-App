@@ -23,26 +23,40 @@ app.use(json())
 
 // get all the restaurants
 app.get('/api/burgers', async (req, res) => {
-    const url = `${process.env.ASTRA_DB_URL}/burger_info?page-size=20`
-    console.log(url)
+    let sub = req.headers['sub']
+    // change all | to _ in the sub
+    sub = sub.replace(/\|/g, '_')
+    const url = `${process.env.ASTRA_DB_URL}/${sub}?page-size=20`
     const options = {
         headers: {
             'X-Cassandra-Token': process.env.ASTRA_DB_APPLICATION_TOKEN,
             'Content-Type': 'application/json'
         }
     }
-    // fetch and return data as json
-    fetch(url, options)
-        .then(response => response.json())
-        .then(data => res.json(data))
-        .catch(err => console.error(err))
+    try {
+        const response = await fetch(url, options)
+        const data = await response.json()
+        res.json(data)
+    }
+    catch (err) {
+        console.error(err)
+    }
+
 
 })
+
+const convertSub = (req) => {
+    let sub = req.headers['sub']
+    // change all | to _ in the sub
+    sub = sub.replace(/\|/g, '_')
+    return sub
+}
 
 // get a single restaurant
 app.get('/api/burgers/:id', (req, res) => {
     const { id } = req.params
-    const url = `${process.env.ASTRA_DB_URL}/burger_info/${id}`
+
+    const url = `${process.env.ASTRA_DB_URL}/${convertSub(req)}/${id}`
     const options = {
         headers: {
             'X-Cassandra-Token': process.env.ASTRA_DB_APPLICATION_TOKEN,
@@ -63,7 +77,8 @@ app.get('/api/burgers/:id', (req, res) => {
 
 // create a restaurant
 app.post('/api/burgers', (req, res) => {
-    const url = `${process.env.ASTRA_DB_URL}/burger_info`
+
+    const url = `${process.env.ASTRA_DB_URL}/${convertSub(req)}`
     const options = {
         method: 'POST',
         headers: {
@@ -72,7 +87,6 @@ app.post('/api/burgers', (req, res) => {
         },
         body: JSON.stringify(req.body)
     }
-    console.log(options.body)
     fetch(url, options)
         .then(response => response.json())
         .then(data => res.json(data))
@@ -82,7 +96,7 @@ app.post('/api/burgers', (req, res) => {
 // update a restaurant
 app.patch('/api/burgers/:id', (req, res) => {
     const { id } = req.params
-    const url = `${process.env.ASTRA_DB_URL}/burger_info/${id}`
+    const url = `${process.env.ASTRA_DB_URL}/${convertSub(req)}/${id}`
     const options = {
         method: 'PATCH',
         headers: {
@@ -100,7 +114,7 @@ app.patch('/api/burgers/:id', (req, res) => {
 // delete a restaurant
 app.delete('/api/burgers/:id', (req, res) => {
     const { id } = req.params
-    const url = `${process.env.ASTRA_DB_URL}/burger_info/${id}`
+    const url = `${process.env.ASTRA_DB_URL}/${convertSub(req)}/${id}`
     const options = {
         method: 'DELETE',
         headers: {

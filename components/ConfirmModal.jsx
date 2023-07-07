@@ -2,17 +2,19 @@ import React from 'react'
 import { Modal } from 'semantic-ui-react'
 import send from '../functions/sendRequest';
 import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react'
 
 const ConfirmModal = ({ confirmModalState, setConfirmModalState, id }) => {
 
     const navigate = useNavigate();
+    const {user } = useAuth0();
 
     const handleDelete = () => {
-        send(`/api/burgers/${id}`, {}, 'DELETE')
+        send(`/api/burgers/${id}`, {}, 'DELETE', user.sub)
             .then((data) => {
                 if (data.ok) {
                     // move to home page
-                    navigate('/');
+                    navigate('/restaurants');
                 }
             })
             .catch((err) => console.log(err));

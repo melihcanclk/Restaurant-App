@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import Home from '../pages/Home'
-import RestaurantId from '../pages/restourant/RestourantId'
-import RestaurantHome from '../pages/restourant/RestaurantHome'
+import RestaurantId from '../pages/restaurant/RestourantId'
+import RestaurantHome from '../pages/restaurant/RestaurantHome'
 import Profile from '../pages/Profile'
 
 function App() {

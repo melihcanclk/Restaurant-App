@@ -18,10 +18,33 @@ https://localhost:8080/
 ```
 for backend
 
+### Screenshots
+
+##### Login
+![image](screenshots/login.png)
+
+##### Register
+![image](screenshots/aouth_screen.png)
+
+##### After auth
+![image](screenshots/after_auth.png)
+
+##### Add Restaurant Modal
+![image](screenshots/add_restaurant.png)
+
+##### Profile
+![image](screenshots/profile.png)
+
+##### Restaurant Info and Visited Button
+![image](screenshots/restaurant_info.png)
+
+##### Edit Restaurant Info
+![image](screenshots/edit_restaurant_info.png)
+
 
 <!-- USAGE EXAMPLES -->
 
-## Usage
+## Tech Stack
 
 ### Frontend
 Frontend is a simple React app that allows user to add its favourite restaurants to the database. It is connected to the NoSql Casandra database with Document API in and the backend server.
